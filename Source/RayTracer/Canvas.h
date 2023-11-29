@@ -1,7 +1,7 @@
 #pragma once
 #include "Color.h"
 #include <vector>
-#include "SDL.h"
+#include <glm/glm.hpp>
 
 class Canvas
 {
@@ -14,7 +14,7 @@ public:
     void Clear(const color4_t& color);
     void DrawPoint(const glm::ivec2& point, const color4_t& color);
 
-    const glm::ivec2& GetSize() const { return m_size; }
+    glm::vec2 GetSize() const { return m_size; }
 
     friend class Renderer;
 

@@ -1,11 +1,12 @@
 #include "Canvas.h"
 #include "Renderer.h"
+#include <SDL.h>
 
 Canvas::Canvas(int width, int height, const Renderer& renderer)
 {
 	m_size = { width, height };
-	m_buffer.resize(sizeof(width * height));
-	m_texture = SDL_CreateTexture(renderer.m_renderer, *m_buffer.data(), SDL_TEXTUREACCESS_STREAMING, width, height);
+	m_texture = SDL_CreateTexture(renderer.m_renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, width, height);
+	m_buffer.resize((width * height));
 }
 
 Canvas::~Canvas()
@@ -18,7 +19,7 @@ Canvas::~Canvas()
 void Canvas::Update()
 {
 	// set texture with buffer rgba_t data
-	SDL_UpdateTexture(m_texture, NULL, m_buffer.data(), sizeof(rgba_t) * m_size.x);
+	SDL_UpdateTexture(m_texture, NULL, m_buffer.data(), m_size.x * sizeof(rgba_t));
 }
 
 void Canvas::Clear(const color4_t& color)
