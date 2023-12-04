@@ -11,10 +11,6 @@
 int main(int argc, char**) { 
 	seedRandom((unsigned int)time(nullptr));
 
-
-
-
-
 	std::cout << "Hello World!" << std::endl;
 
 	Renderer renderer;
@@ -41,7 +37,7 @@ int main(int argc, char**) {
 		std::shared_ptr<Material> material = ((int)random(0, 2) == 0) ? std::dynamic_pointer_cast<Material>(lambertian) : std::dynamic_pointer_cast<Material>(metal);
 		auto sphere = std::make_unique<Sphere>(random({ -2, -2, -1 }, { 2, 2, -7 }), random(0.2, 0.4), material);
 		scene.AddObject(std::move(sphere));
-	}
+	
 	
 	canvas.Clear({ 0, 0, 0, 1 });
 	scene.Render(canvas, 30);
