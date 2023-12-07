@@ -15,13 +15,14 @@
 void InitScene01(Scene& scene, const Canvas& canvas);
 void InitScene02(Scene& scene, const Canvas& canvas);
 void InitScene03(Scene& scene, const Canvas& canvas);
+void InitScene04(Scene& scene, const Canvas& canvas);
 
 
 int main(int argc, char**) {
 	const int width = 800;
 	const int height = 600;
-	const int samples = 5;
-	const int depth = 8;
+	const int samples = 20;
+	const int depth = 3;
 
 	seedRandom((unsigned int)time(nullptr));
 
@@ -35,6 +36,7 @@ int main(int argc, char**) {
 	Canvas canvas(width, height, renderer);
 	Scene scene(glm::vec3{ 1.0f }, glm::vec3{ 0.5f, 0.7f, 1.0f });
 
+	InitScene01(scene, canvas);
 	InitScene03(scene, canvas);
 
 	// render scene
@@ -109,6 +111,7 @@ void InitScene01(Scene& scene, const Canvas& canvas)
 	scene.AddObject(std::move(plane));
 }
 
+
 void InitScene02(Scene& scene, const Canvas& canvas)
 {
 	float aspectRatio = canvas.GetSize().x / canvas.GetSize().y;
@@ -125,42 +128,54 @@ void InitScene02(Scene& scene, const Canvas& canvas)
 	mesh->Load("models/cube.obj", glm::vec3{ 0, 0.5f, 0 }, glm::vec3{ 0, 45, 0 });
 	scene.AddObject(std::move(mesh));
 }
+
+
 void InitScene03(Scene& scene, const Canvas& canvas)
+{
+	//float aspectRatio = canvas.GetSize().x / canvas.GetSize().y;
+	//std::shared_ptr<Camera> camera = std::make_shared<Camera>(glm::vec3{ 0, 0, 25 }, glm::vec3{ 0, 0, 0 }, glm::vec3{ 0, 1, 0 }, 20.0f, aspectRatio);
+	//scene.SetCamera(camera);
+
+	
+	
+
+	auto mesh = std::make_unique<Mesh>(std::make_shared<Lambertian>(glm::vec3{ 1.0f, 1.0f, 1.0f }));
+	mesh->Load("models/man.fbx", glm::vec3{ 0.0f, 0.0f, -10 }, glm::vec3{ 0, 0, 0 }, glm::vec3{ 1 });
+	scene.AddObject(std::move(mesh));
+
+	mesh = std::make_unique<Mesh>(std::make_shared<Lambertian>(glm::vec3{ 1.0f, 1.0f, 0.0f }));
+	mesh->Load("models/cube.obj", glm::vec3{ -1.7f, 0.5f, -11.5f }, glm::vec3{ 0, 12, 0 }, glm::vec3{ 2, 4, 2 });
+	scene.AddObject(std::move(mesh));
+
+	auto quad = std::make_unique<Plane>(glm::vec3{ 0, 5, -10 }, glm::vec3{ 0, -1, 0 }, std::make_shared<Emissive>(glm::vec3{ 1.0f, 1.0f, 1.0f }));
+	scene.AddObject(std::move(quad));
+
+	quad = std::make_unique<Plane>(glm::vec3{ 0, -5, -10 }, glm::vec3{ 0, 1, 0 }, std::make_shared<Lambertian>(glm::vec3{ 1.0f, 1.0f, 1.0f }));
+	scene.AddObject(std::move(quad));
+
+	quad = std::make_unique<Plane>(glm::vec3{ -5, 0, -10 }, glm::vec3{ 1, 0, 0 }, std::make_shared<Lambertian>(glm::vec3{ 1.0f, 0, 0 }));
+	scene.AddObject(std::move(quad));
+
+	quad = std::make_unique<Plane>(glm::vec3{ 5, 0, -10 }, glm::vec3{ -1, 0, 0 }, std::make_shared<Lambertian>(glm::vec3{ 0, 1.0f, 0 }));
+	scene.AddObject(std::move(quad));
+
+	quad = std::make_unique<Plane>(glm::vec3{ 0, 0, -15 }, glm::vec3{ 0, 0, 1 }, std::make_shared<Lambertian>(glm::vec3{ 1.0f, 1.0f, 1.0f }));
+	scene.AddObject(std::move(quad));
+
+	quad = std::make_unique<Plane>(glm::vec3{ 0, 0, 26 }, glm::vec3{ 0, 0, -1 }, std::make_shared<Lambertian>(glm::vec3{ 1, 1, 1 }));
+	scene.AddObject(std::move(quad));
+
+	
+}
+void InitScene04(Scene& scene, const Canvas& canvas)
 {
 	float aspectRatio = canvas.GetSize().x / canvas.GetSize().y;
 	std::shared_ptr<Camera> camera = std::make_shared<Camera>(glm::vec3{ 0, 0, 10 }, glm::vec3{ 0, 0, 0 }, glm::vec3{ 0, 1, 0 }, 20.0f, aspectRatio);
 	scene.SetCamera(camera);
 
 
-	// Cube 
 
-	
-	auto mesh = std::make_unique<Mesh>(std::make_shared<Emissive>(glm::rgbColor(glm::vec3{ random(0, 360), 1.0f, 1.0f }), 5.0f));
-	mesh->Load("models/cube.obj", glm::vec3{ 0, 1.5f, 0 }, glm::vec3{ 0, 0, 0 }, glm::vec3{ 0.5f });
-	scene.AddObject(std::move(mesh));
-	
-
-	
-	{   // Planes
-		//std::shared_ptr<Material> material = std::make_shared<Lambertian>(color3_t{ 0, 1, 0 });
-		//auto planeGreen = std::make_unique<Plane>(glm::vec3{ 10, 0, 0 }, glm::vec3{ -1, 0, 0 }, material);
-		//scene.AddObject(std::move(planeGreen));
-
-		//material = std::make_shared<Lambertian>(color3_t{ 1, 0, 0 });
-		//auto planeRed = std::make_unique<Plane>(glm::vec3{ -10, 0, 0 }, glm::vec3{ 1, 0, 0 }, material);
-		//scene.AddObject(std::move(planeRed));
-
-		// White Walls
-
-		auto material = std::make_shared<Lambertian>(color3_t{ 0.95f, 0.95f, 0.85f });
-		auto planeWhite = std::make_unique<Plane>(glm::vec3{ 0, 9, 0 }, glm::vec3{ 0, -1, 0 }, material);
-		scene.AddObject(std::move(planeWhite));
-
-		//auto planeWhite = std::make_unique<Plane>(glm::vec3{ 0, -10, 0 }, glm::vec3{ 0, 1, 0 }, material);
-		//scene.AddObject(std::move(planeWhite));
-
-		//planeWhite = std::make_unique<Plane>(glm::vec3{ 0, 0, -50 }, glm::vec3{ 0, 0, 1 }, material);
-		//scene.AddObject(std::move(planeWhite));
-	}
-	
+	auto quad = std::make_unique<Mesh>(std::make_shared<Lambertian>(glm::vec3{ 1 }));
+	quad->Load("models/quad.obj", glm::vec3{ 0, 0, -13 }, glm::vec3{ 0, 0, 0 }, glm::vec3{ 20 });
+	scene.AddObject(std::move(quad));
 }
